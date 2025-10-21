@@ -1,0 +1,29 @@
+name: SBOM Security Scan
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  sbom_scan:
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+#Генерація SBOM через Syft
+      - name: Generate SBOM with Syft
+        uses: anchore/syft-action@v3
+        with:
+          image: bkimminich/juice-shop
+          format: cyclonedx-json
+          output: sbom.json
+
+#Перевірка з Grype
+      - name: Scan SBOM for vulnerabilities with Grype
+        uses: anchore/grype-action@v3
+        with:
+          sbom: sbom.json
