@@ -16,7 +16,7 @@ jobs:
 
 #Генерація SBOM через Syft
       - name: Generate SBOM with Syft
-        uses: anchore/syft-action@v3
+        uses: anchore/sbom-action@v0
         with:
           image: bkimminich/juice-shop
           format: cyclonedx-json
@@ -24,6 +24,6 @@ jobs:
 
 #Перевірка з Grype
       - name: Scan SBOM for vulnerabilities with Grype
-        uses: anchore/grype-action@v3
+        uses: anchore/scan-action@v5
         with:
           sbom: sbom.json
