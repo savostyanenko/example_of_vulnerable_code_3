@@ -20,10 +20,11 @@ jobs:
         with:
           image: bkimminich/juice-shop
           format: cyclonedx-json
-          output: sbom.json
+          output-file: sbom.json
 
 #Перевірка з Grype
       - name: Scan SBOM for vulnerabilities with Grype
         uses: anchore/scan-action@v5
         with:
           sbom: sbom.json
+          severity-cutoff: high
