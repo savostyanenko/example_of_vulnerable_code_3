@@ -9,7 +9,7 @@ on:
 permissions:
   security-events: write
   contents: read
-  
+
 jobs:
   sbom_scan:
     runs-on: ubuntu-24.04
@@ -28,7 +28,7 @@ jobs:
 
 #Check with Grype
       - name: Scan SBOM for vulnerabilities with Grype
-        uses: anchore/scan-action@v3
+        uses: anchore/scan-action@v0
         with:
           sbom: sbom.json
           severity-cutoff: high
