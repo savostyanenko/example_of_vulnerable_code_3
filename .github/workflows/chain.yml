@@ -14,7 +14,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-#Генерація SBOM через Syft
+#Create SBOM - Syft
       - name: Generate SBOM with Syft
         uses: anchore/sbom-action@v0
         with:
@@ -22,10 +22,17 @@ jobs:
           format: cyclonedx-json
           output-file: sbom.json
 
-#Перевірка з Grype
+#Check with Grype
       - name: Scan SBOM for vulnerabilities with Grype
         uses: anchore/scan-action@v5
         with:
           sbom: sbom.json
           severity-cutoff: high
+          output-file: grype-results.sarif
           fail-build: false
+
+#Report to Security tab
+      - name: Upload vulnerability report to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: grype-results.sarif
