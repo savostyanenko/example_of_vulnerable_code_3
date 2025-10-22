@@ -26,9 +26,10 @@ jobs:
           format: cyclonedx-json
           output-file: sbom.json
 
-      # Check with Grype (using scan-action)
+      # Check with Grype (using scan-action v6)
       - name: Scan SBOM for vulnerabilities with Grype
-        uses: anchore/scan-action@v0
+        id: scan  # Add ID for output reference (optional but recommended)
+        uses: anchore/scan-action@v6
         with:
           sbom: sbom.json
           severity-cutoff: high
@@ -40,4 +41,4 @@ jobs:
       - name: Upload vulnerability report to GitHub Security tab
         uses: github/codeql-action/upload-sarif@v3
         with:
-          sarif_file: grype-results.sarif
+          sarif_file: grype-results.sarif  # Or use ${{ steps.scan.outputs.sarif }} if you prefer dynamic reference
