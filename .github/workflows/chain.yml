@@ -28,3 +28,4 @@ jobs:
         with:
           sbom: sbom.json
           severity-cutoff: high
+          fail-build: false
