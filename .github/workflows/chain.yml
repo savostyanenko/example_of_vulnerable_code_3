@@ -24,7 +24,7 @@ jobs:
 
 #Check with Grype
       - name: Scan SBOM for vulnerabilities with Grype
-        uses: anchore/scan-action@v5
+        uses: anchore/scan-action@v3
         with:
           sbom: sbom.json
           severity-cutoff: high
