@@ -28,6 +28,7 @@ jobs:
         with:
           sbom: sbom.json
           severity-cutoff: high
+          output-format: sarif
           output-file: grype-results.sarif
           fail-build: false
 
