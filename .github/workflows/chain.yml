@@ -29,7 +29,7 @@ jobs:
           sbom: sbom.json
           severity-cutoff: high
           output-format: sarif
-          output-file: grype-results.sarif
+          output: grype-results.sarif
           fail-build: false
 
 #Report to Security tab
