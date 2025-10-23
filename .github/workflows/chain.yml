@@ -7,8 +7,8 @@ on:
     branches: [ main ]
 
 permissions:
-  security-events: write
   contents: read
+  security-events: write
 
 jobs:
   sbom_scan:
@@ -18,7 +18,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # Create SBOM - Syft
       - name: Generate SBOM with Syft
         uses: anchore/sbom-action@v0
         with:
@@ -26,19 +25,16 @@ jobs:
           format: cyclonedx-json
           output-file: sbom.json
 
-      # Check with Grype (using scan-action v6)
       - name: Scan SBOM for vulnerabilities with Grype
-        id: scan  # Add ID for output reference (optional but recommended)
+        id: scan
         uses: anchore/scan-action@v6
         with:
           sbom: sbom.json
-          severity-cutoff: high
           output-format: sarif
           output: grype-results.sarif
           fail-build: false
 
-      # Report to Security tab
       - name: Upload vulnerability report to GitHub Security tab
         uses: github/codeql-action/upload-sarif@v3
         with:
-          sarif_file: grype-results.sarif  # Or use ${{ steps.scan.outputs.sarif }} if you prefer dynamic reference
+          sarif_file: ./grype-results.sarif
