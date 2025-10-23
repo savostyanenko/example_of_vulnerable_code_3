@@ -31,8 +31,9 @@ jobs:
         with:
           sbom: sbom.json
           output-format: sarif
-          output: grype-results.sarif
+          output-file: grype-results.sarif
           fail-build: false
+          severity-cutoff: medium
 
       - name: Upload vulnerability report to GitHub Security tab
         uses: github/codeql-action/upload-sarif@v3
