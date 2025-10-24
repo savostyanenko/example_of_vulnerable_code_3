@@ -1,2 +1,1 @@
 # example_of_vulnerable_code_3
-aaa
