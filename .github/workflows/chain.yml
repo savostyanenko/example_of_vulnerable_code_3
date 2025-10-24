@@ -95,6 +95,7 @@ jobs:
             cert="dist/${base}.pem"
             echo "Signing $base -> $sig $cert"
             cosign sign-blob "$f" \
+              --yes \
               --output-signature "$sig" \
               --output-certificate "$cert"
             mv "$sig" "dist/signed/"
