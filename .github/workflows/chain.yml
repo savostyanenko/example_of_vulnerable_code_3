@@ -1,27 +1,31 @@
-name: SBOM Security Scan
+name: Build, Sign and SBOM Security Scan
 
 on:
   push:
     branches: [ main ]
+    tags:
+      - 'v*'
   pull_request:
     branches: [ main ]
 
 permissions:
-  contents: read
-  security-events: write
+  contents: write           # створення релізів
+  id-token: write           # OIDC для Sigstore
+  security-events: write    # завантаження звітів у Security tab
 
 jobs:
+  # --- SBOM і перевірка безпеки ---
   sbom_scan:
+    name: Generate and Scan SBOM
     runs-on: ubuntu-24.04
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        
-      - name: SBOM with Syft
+
+      - name: Generate SBOM (source code)
         uses: anchore/sbom-action@v0
         with:
-          image: bkimminich/juice-shop
+          path: .
           format: cyclonedx-json
           output-file: sbom.json
 
@@ -35,10 +39,17 @@ jobs:
           fail-build: false
           severity-cutoff: medium
 
-      - name: Upload report to Security_tab
+      - name: Upload results to Security tab
         uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: ./grype-results.sarif
+
+      - name: Save SBOM as artifact (for release job)
+        uses: actions/upload-artifact@v4
+        with:
+          name: sbom
+          path: sbom.json
+
   # --- Збірка, підпис і реліз ---
   build_sign_release:
     name: Build, Sign and Release
@@ -99,4 +110,3 @@ jobs:
             dist/signed/*
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          
