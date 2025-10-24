@@ -1,8 +1,12 @@
 FROM ubuntu:latest
-COPY app/ /app
-WORKDIR /app
-RUN apt-get update && apt-get install -y python3
-RUN useradd -m appuser && chown -R appuser:appuser /app
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends python3 python3-venv python3-pip && \
+    rm -rf /var/lib/apt/lists/*
+
+COPY project/ /opt/project
+WORKDIR /opt/project
+RUN useradd -m appuser && chown -R appuser:appuser /opt/project
 USER appuser
-CMD ["python3", "app.py"]
+RUN if [ -f requirements.txt ]; then pip install --no-cache-dir -r requirements.txt; fi
 EXPOSE 8080
+CMD ["python3", "app.py"]
